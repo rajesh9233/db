@@ -1,0 +1,29 @@
+--- Queries ---
+
+
+use `social-profile`;
+
+1.In friends table list the data which are matched the user profile_id?
+
+## ANS : select * from friends where user_profile_id=4;
+
+
+2.Display all the post of user_profilr_id = 5 ?
+
+ANS : select * from posts where user_profile_id = 5;
+
+
+3.Write the query that matching the words or character with %gmail%?
+
+ANS: 
+select * from user_profile where user_email Like '%gmail%';
+select * from friends where friend_email Like '%gmail%';
+
+4.Limit the display data from the table comments for 5 which belongs to the user 3?
+
+ANS: select  * from  comments where post_id = 3 limit 5;
+
+5.Combine profile_status and user_profile_status and user_login_details display matching records?
+
+ANS: select t1.profile_id,t1.profile_name,t1.user_email,t1.date_of_birth,t1.user_mobile,t2.user_login_id,t2.user_name, t3.profile_status_id,t3.profile_status_name from user_profile as t1 inner join user_login_details as t2 on t1.profile_id = t2.user_profile_id inner join profile_status as t3 on t3.profile_status_id = t2.user_profile_id;
+
