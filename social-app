@@ -1,0 +1,189 @@
+
+use `social-profile`;
+
+----Table Creation----
+CREATE TABLE `profile_status` (
+  `profile_status_id` INT NOT NULL AUTO_INCREMENT,
+  `profile_status_name` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`profile_status_id`));
+  
+
+CREATE TABLE `user_profile` (
+  `profile_id` INT NOT NULL AUTO_INCREMENT,
+  `profile_name` VARCHAR(45) NOT NULL,
+  `first_name` VARCHAR(45) NULL,
+  `last_name` VARCHAR(45) NULL,
+  `user_email` VARCHAR(45) NOT NULL,
+  `user_mobile` VARCHAR(45) NOT NULL,
+  `date_of_birth` DATE NOT NULL,
+  PRIMARY KEY (`profile_id`));
+
+
+CREATE TABLE `friends` (
+  `friend_id` INT NOT NULL,
+  `friend_name` VARCHAR(45) NULL,
+  `friend_email` VARCHAR(45) NULL,
+  PRIMARY KEY (`friend_id`));
+
+
+CREATE TABLE `comments` (
+  `comment_id` INT NOT NULL,
+  `comment` VARCHAR(45) NOT NULL,
+  `created_at` DATETIME NOT NULL,
+  `post_id` INT NULL,
+  PRIMARY KEY (`comment_id`));
+  
+
+CREATE TABLE `likes` (
+  `likes_id` INT NOT NULL,
+  `num_of_likes` INT NOT NULL,
+  `post_id` VARCHAR(45) NULL,
+  PRIMARY KEY (`likes_id`));
+
+
+CREATE TABLE `user_login_details` (
+  `user_login_id` INT NOT NULL AUTO_INCREMENT,
+  `user_name` VARCHAR(45) NOT NULL,
+  `last_login_time` DATETIME NOT NULL,
+  PRIMARY KEY (`user_login_id`));
+
+
+CREATE TABLE `posts` (
+  `post_id` INT NOT NULL AUTO_INCREMENT,
+  `post_title` VARCHAR(45) NOT NULL,
+  `post_content` VARCHAR(45) NOT NULL,
+  `created_at` TIMESTAMP NOT NULL,
+  PRIMARY KEY (`post_id`));
+  
+----Table Creation Ended ---
+
+
+
+
+
+---Foriegn Key Creation ---
+
+ALTER TABLE `likes` 
+CHANGE COLUMN `post_id` `post_id` INT NULL DEFAULT NULL ,
+ADD INDEX `post_id_idx` (`post_id` ASC) VISIBLE;
+;
+ALTER TABLE `likes` 
+ADD CONSTRAINT `post_id`
+  FOREIGN KEY (`post_id`)
+  REFERENCES `social-profile`.`posts` (`post_id`)
+  ON DELETE NO ACTION
+  ON UPDATE NO ACTION;
+  
+
+ALTER TABLE `comments`
+  ADD CONSTRAINT `fk_comments_posts1` FOREIGN KEY (`post_id`) REFERENCES `posts` (`post_id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+  
+ALTER TABLE `posts`
+  ADD CONSTRAINT `fk_posts_user_profile` FOREIGN KEY (`user_profile_id`) REFERENCES `user_profile` (`profile_id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+  
+ALTER TABLE `friends`
+  ADD CONSTRAINT `fk_friends_user_profile1` FOREIGN KEY (`user_profile_id`) REFERENCES `user_profile` (`profile_id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+  
+ALTER TABLE `user_login_details`
+  ADD CONSTRAINT `fk_user_login_details_user_profile1` FOREIGN KEY (`user_profile_id`) REFERENCES `user_profile` (`profile_id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+  
+ALTER TABLE `user_profile`
+  ADD CONSTRAINT `fk_user_profile_profile_status1` FOREIGN KEY (`user_profile_status_id`) REFERENCES `profile_status` (`profile_status_id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+  
+---Foriegn Key Creation Ended---
+
+
+
+--- Insert Values ---  
+INSERT INTO `profile_status` (`profile_status_id`, `profile_status_name`) VALUES
+(1, 'active'),
+(2, 'inActive'),
+(3, 'closed'),
+(4, 'suspended'),
+(5, 'deleted');
+
+
+
+
+INSERT INTO `user_profile` (`profile_id`, `profile_name`, `first_name`, `last_name`, `user_email`, `user_mobile`, `date_of_birth`, `user_profile_status_id`, `created_at`) VALUES
+(1, 'rajesh', 'Rajesh', 'Murugesan','rajeshmurugesan228@gmail.com', 7010159325, '1996-11-09', 1, '2021-10-19 00:00:00.000000');
+(2, 'asik', 'Mohamed', 'Asik','mohamedasik@outlook.com', 8956321475, '1996-11-28', 2, '2021-10-20 00:00:00.000000');
+(3, 'praveen', 'Praveen', 'M','praveenm@yahoo.com', 7449325675, '1996-02-22', 3, '2021-10-21 00:00:00.000000');
+(4, 'poovarasan', 'Poovarasan', 'A','poovarasana@gmail.com', 944868756, '1996-02-26', 4, '2021-10-22 00:00:00.000000');
+(5, 'rafi', 'Mohamed', 'Rafi','rafiips@hotmail.com', 7842456895, '1994-06-10', 5, '2021-10-23 00:00:00.000000');
+
+INSERT INTO `user_login_details` (`user_login_id`, `last_login_time`, `user_name`, `user_profile_id`) VALUES
+(1, '2021-10-15 00:00:00', 'rajesh', 1),
+(2, '2021-10-16 05:00:52', 'asik', 2),
+(3, '2021-10-17 10:40:22', 'praveen', 3),
+(4, '2021-10-23 00:00:00', 'poovarasan', 4),
+(5, '2021-10-28 00:00:00', 'rafi', 5);
+
+
+INSERT INTO `posts` (`post_id`, `post_title`, `post_content`, `user_profile_id`, `created_at`) VALUES
+(1, 'Apple', 'Apple Apple Apple', 1, '2021-10-25 00:00:00.000000'),
+(2, 'Orange', 'Orange Orange Orange', 1, '2021-10-26 00:00:00.000000'),
+(3, 'Grapes', 'Grapes Grapes Grapes', 2, '2021-10-25 00:00:00.000000'),
+(4, 'PineApple', 'PineApple PineApple PineApple', 2, '2021-10-26 00:00:00.000000'),
+(5, 'Banana', 'Banana Banana Banana', 3, '2021-10-25 00:00:00.000000'),
+(6, 'Papaya', 'Papaya Papaya Papaya', 3, '2021-10-26 00:00:00.000000'),
+(7, 'ABC', 'ABC abc abc', 4, '2021-10-25 00:00:00.000000'),
+(8, 'XYZ', 'xyzyzyz', 4, '2021-10-26 00:00:00.000000'),
+(9, 'Green', 'Green green', 5, '2021-10-25 00:00:00.000000'),
+(10, 'Red', 'red red', 5, '2021-10-26 00:00:00.000000');
+
+
+INSERT INTO `comments` (`comment_id`, `comment`, `post_id`, `created_at`) VALUES
+(1, 'Apple',  1, '2021-10-26 00:00:00.000000'),
+(2, 'Orange', 1, '2021-10-27 00:00:00.000000'),
+(3, 'Grapes',  2, '2021-10-28 00:00:00.000000'),
+(4, 'PineApple', 2, '2021-10-29 00:00:00.000000'),
+(5, 'Banana',  3, '2021-10-30 00:00:00.000000'),
+(6, 'Papaya', 3, '2021-10-31 00:00:00.000000'),
+(7, 'ABC',4, '2021-11-11 00:00:00.000000'),
+(8, 'XYZ', 4, '2021-11-12 00:00:00.000000'),
+(9, 'Green', 5, '2021-11-13 00:00:00.000000'),
+(10, 'Red', 5, '2021-11-14 00:00:00.000000');
+
+INSERT INTO `likes` (`likes_id`, `num_of_likes`, `post_id`) VALUES
+(1, 10, 1),(2, 150, 2),(3, 60, 3),(4, 1500, 4),(5, 1005, 5),
+(6, 250, 6),(7, 350, 7),(8, 15, 8),(9, 2, 9),(10, 0, 10);
+
+INSERT INTO `friends` (`friend_id`, `friend_name`, `friend_email`, `friend_mobile`, `user_profile_id`) VALUES
+(1, 'rajesh', 'rajeshmurugesan228@gmail.com', 7010159325, 1),
+(2, 'asik', 'mohamedasik@outlook.com', 8956321475,  2),
+(3,  'Praveen','praveenm@yahoo.com', 7449325675, 3),
+(4,'Poovarasan','poovarasana@gmail.com', 944868756, 4),
+(5, 'rafi','rafiips@hotmail.com', 7842456895 , 5);
+
+--- Insert Values Ended ---  
+
+--- Queries ---
+
+
+use `social-profile`;
+
+1.In friends table list the data which are matched the user profile_id?
+
+ANS : select * from friends where user_profile_id=4;
+
+
+2.Display all the post of user_profilr_id = 5 ?
+
+ANS : select * from posts where user_profile_id = 5;
+
+
+3.Write the query that matching the words or character with %gmail%?
+
+ANS: 
+select * from user_profile where user_email Like '%gmail%';
+select * from friends where friend_email Like '%gmail%';
+
+4.Limit the display data from the table comments for 5 which belongs to the user 3?
+
+ANS: select  * from  comments where post_id = 3 limit 5;
+
+5.Combine profile_status and user_profile_status and user_login_details display matching records?
+
+ANS: select t1.profile_id,t1.profile_name,t1.user_email,t1.date_of_birth,t1.user_mobile,t2.user_login_id,t2.user_name, t3.profile_status_id,t3.profile_status_name from user_profile as t1 inner join user_login_details as t2 on t1.profile_id = t2.user_profile_id inner join profile_status as t3 on t3.profile_status_id = t2.user_profile_id;
+
