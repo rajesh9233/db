@@ -1,0 +1,92 @@
+use `social-profile`;
+
+----Table Creation----
+CREATE TABLE `profile_status` (
+  `profile_status_id` INT NOT NULL AUTO_INCREMENT,
+  `profile_status_name` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`profile_status_id`));
+  
+
+CREATE TABLE `user_profile` (
+  `profile_id` INT NOT NULL AUTO_INCREMENT,
+  `profile_name` VARCHAR(45) NOT NULL,
+  `first_name` VARCHAR(45) NULL,
+  `last_name` VARCHAR(45) NULL,
+  `user_email` VARCHAR(45) NOT NULL,
+  `user_mobile` VARCHAR(45) NOT NULL,
+  `date_of_birth` DATE NOT NULL,
+  PRIMARY KEY (`profile_id`));
+
+
+CREATE TABLE `friends` (
+  `friend_id` INT NOT NULL,
+  `friend_name` VARCHAR(45) NULL,
+  `friend_email` VARCHAR(45) NULL,
+  PRIMARY KEY (`friend_id`));
+
+
+CREATE TABLE `comments` (
+  `comment_id` INT NOT NULL,
+  `comment` VARCHAR(45) NOT NULL,
+  `created_at` DATETIME NOT NULL,
+  `post_id` INT NULL,
+  PRIMARY KEY (`comment_id`));
+  
+
+CREATE TABLE `likes` (
+  `likes_id` INT NOT NULL,
+  `num_of_likes` INT NOT NULL,
+  `post_id` VARCHAR(45) NULL,
+  PRIMARY KEY (`likes_id`));
+
+
+CREATE TABLE `user_login_details` (
+  `user_login_id` INT NOT NULL AUTO_INCREMENT,
+  `user_name` VARCHAR(45) NOT NULL,
+  `last_login_time` DATETIME NOT NULL,
+  PRIMARY KEY (`user_login_id`));
+
+
+CREATE TABLE `posts` (
+  `post_id` INT NOT NULL AUTO_INCREMENT,
+  `post_title` VARCHAR(45) NOT NULL,
+  `post_content` VARCHAR(45) NOT NULL,
+  `created_at` TIMESTAMP NOT NULL,
+  PRIMARY KEY (`post_id`));
+  
+----Table Creation Ended ---
+
+
+
+
+
+---Foriegn Key Creation ---
+
+ALTER TABLE `likes` 
+CHANGE COLUMN `post_id` `post_id` INT NULL DEFAULT NULL ,
+ADD INDEX `post_id_idx` (`post_id` ASC) VISIBLE;
+;
+ALTER TABLE `likes` 
+ADD CONSTRAINT `post_id`
+  FOREIGN KEY (`post_id`)
+  REFERENCES `social-profile`.`posts` (`post_id`)
+  ON DELETE NO ACTION
+  ON UPDATE NO ACTION;
+  
+
+ALTER TABLE `comments`
+  ADD CONSTRAINT `fk_comments_posts1` FOREIGN KEY (`post_id`) REFERENCES `posts` (`post_id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+  
+ALTER TABLE `posts`
+  ADD CONSTRAINT `fk_posts_user_profile` FOREIGN KEY (`user_profile_id`) REFERENCES `user_profile` (`profile_id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+  
+ALTER TABLE `friends`
+  ADD CONSTRAINT `fk_friends_user_profile1` FOREIGN KEY (`user_profile_id`) REFERENCES `user_profile` (`profile_id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+  
+ALTER TABLE `user_login_details`
+  ADD CONSTRAINT `fk_user_login_details_user_profile1` FOREIGN KEY (`user_profile_id`) REFERENCES `user_profile` (`profile_id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+  
+ALTER TABLE `user_profile`
+  ADD CONSTRAINT `fk_user_profile_profile_status1` FOREIGN KEY (`user_profile_status_id`) REFERENCES `profile_status` (`profile_status_id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+  
+---Foriegn Key Creation Ended---
